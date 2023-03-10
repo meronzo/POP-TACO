@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">    
+	<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            border: none;
+            z-index: 10;
+        }
+
+        body{
+            font-size: 0;
+            user-select: none;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .Header {
+            position: absolute;
+            top: 16px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Jua', sans-serif;
+            font-weight: bold;
+            color: white;
+            -webkit-text-stroke: 0.2px black;
+        }
+
+        .HeaderTitle {
+            letter-spacing: 5.2px;
+            font-size: 100px;
+        }
+
+        .HeaderCounter {
+            position: relative;
+            top: -32px;
+            letter-spacing: 4px;
+            font-size: 46px;
+            display: inline-block;
+        }
+
+        .Content{
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            height: 100%;
+            width: 100%;
+        }
+        .ContentActive{
+            z-index: 1 !important;
+        }
+        .Button{
+            position: absolute;
+            bottom: 22px;
+            left: 22px;
+        }
+        .DragButton{
+            display: flex;
+            height: 56px;
+            width: 56px;
+            font-size: 22px;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(233, 145, 145);
+            color: rgb(92, 28, 28);
+            transition: 0.2s all;
+            cursor: pointer;
+        }
+        .DragButton:hover{
+            background-color: rgb(175, 96, 96);
+        }
+        #DragButton:checked + .DragButton{
+            background-color: rgb(184, 106, 126);
+        }
+    </style>
+
+    
+</head>
+
+<body>
+    <div class="Header">
+        <h1 class="HeaderTitle">POPTACO</h1>
+        <span class="HeaderCounter" data-count="0">0</span>
+    </div>
+
+    <div class="Content">
+        <iframe id="iframe" src='https://my.spline.design/molang3dcopy-e21f4a572b14667e56a3cc2af0aeb9df/'
+            frameborder='0' width='100%' height='100%'></iframe>
+    </div>
+
+    <div class="Button">
+        <input type="checkbox" id="DragButton" onchange="ToggleActive()" hidden></input>
+        <label for="DragButton" class="DragButton"><i class="fa-regular fa-hand"></i></label>
+    </div>
+
+    <audio id="PopEffect" hidden>
+        <source src="./src/PopEffect.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        let TotalCount;
+        document.cookie === "" ? TotalCount = 0 : TotalCount = Number(document.cookie);
+        let FirstTap = true;
+
+        // activate drag model
+        const Content = document.querySelector(".Content");
+        function ToggleActive(){
+            Content.classList.toggle("ContentActive");
+        }
+
+        // listen mousedown
+        const HeaderCounter = document.querySelector(".HeaderCounter");
+        const PopEffect = document.querySelector("#PopEffect");
+        function UpdateCounter(){
+            TotalCount++;
+            PopEffect.currentTime = 0;
+            PopEffect.play();
+            HeaderCounter.innerHTML = TotalCount;
+            HeaderCounter.animate(
+            [
+                {   transform: "rotate(0deg)", fontSize: "46px"},
+                {   transform: `rotate(${Math.random()*84 - 42}deg)`, fontSize: "50px"}
+            ],
+            {
+                duration: 160,
+                direction:"alternate-reverse",
+                iterations:1
+            })
+        }
+        window.addEventListener("mousedown", ()=>{
+            UpdateCounter();
+        });
+        window.addEventListener("keydown", (event)=>{
+            if(FirstTap && event.key == " "){
+                UpdateCounter();
+                FirstTap = false;
+            }
+        })
+        window.addEventListener("keyup", ()=>{
+            FirstTap = true;
+        })
+
+    </script>
+	<!-- Font Awesome -->
+	<script src="https://kit.fontawesome.com/db1e596adb.js" crossorigin="anonymous"></script>
+</body>
+</html>
