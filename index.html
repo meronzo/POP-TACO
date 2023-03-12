@@ -111,8 +111,18 @@
     </audio>
 
     <script>
+        const datas = document.cookie.split(";");
+        let cookies = new Map;
+
+        // Get Cookies
+        datas.forEach(element => {
+            let content = element.split("=");
+            content[0] = content[0].trim();
+           cookies.set(content[0],content[1]); 
+        });
         let TotalCount;
-        document.cookie === "" ? TotalCount = 0 : TotalCount = Number(document.cookie);
+        typeof cookies.get("TotalCount") === "string" ? TotalCount = Number(cookies.get("TotalCount")) : TotalCount = 0;
+
         let FirstTap = true;
 
         // activate drag model
@@ -126,6 +136,7 @@
         const PopEffect = document.querySelector("#PopEffect");
         function UpdateCounter(){
             TotalCount++;
+            document.cookie = `TotalCount=${TotalCount}`;
             PopEffect.currentTime = 0;
             PopEffect.play();
             HeaderCounter.innerHTML = TotalCount;
@@ -152,6 +163,9 @@
         window.addEventListener("keyup", ()=>{
             FirstTap = true;
         })
+        
+        // Statistics Init
+        HeaderCounter.innerHTML = TotalCount;
 
     </script>
 	<!-- Font Awesome -->
